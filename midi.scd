@@ -1,6 +1,17 @@
-MIDIClient.init
 MIDIIn.connectAll;
-MIDIIn.disconnectAll
+~drums =  MIDIOut.newByName("Pro40", "MIDI");
+
+Pdef(\midiClock,
+    Pbind(
+        \type, \midi,
+        \midicmd, \midiClock,
+        \dur, 1/24,
+        \midiout, ~drums
+    )
+).quant_(4);
+
+Pdef(\midiClock).play
+TempoClock.sched(4, ~drums.start)
 
 MIDIdef.cc(\midiCC,{
      arg val, cc, chan;
@@ -47,25 +58,3 @@ MIDIdef.cc(\nano5,{
     arg val;
     Ndef(\play).set(\cutOff, val.linexp(0,127,16, 8192));
 }, 4);
-
-~drums =  MIDIOut.newByName("Pro40", "MIDI");
-
-TempoClock.sched(4, ~drums.start)
-TempoClock.sched(4, ~drums.start)
-~drums.start
-~drums.stop
-
-Pdef(\midiClock, 
-    Pbind(
-        \type, \midi,
-        \midicmd, \midiClock,
-        \dur, 1/24,
-        \midiout, ~drums
-    )
-).quant_(4);
-
-Quarks.gui
-
-Pdef(\midiClock).play
-
-m = MIDIClockOut.new
